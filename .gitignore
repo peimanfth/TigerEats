@@ -8,3 +8,27 @@ __pycache__/
 *.pyd
 .env
 *.db
+
+
+
+# dependencies for the frontend
+tigereats-frontend/node_modules
+tigereats-frontend/.pnp
+tigereats-frontend/.pnp.js
+
+# testing
+tigereats-frontend/coverage
+
+# production
+tigereats-frontend/build
+
+# misc
+tigereats-frontend/.DS_Store
+tigereats-frontend/.env.local
+tigereats-frontend/.env.development.local
+tigereats-frontend/.env.test.local
+tigereats-frontend/.env.production.local
+
+tigereats-frontend/npm-debug.log*
+tigereats-frontend/yarn-debug.log*
+tigereats-frontend/yarn-error.log*
