@@ -6,7 +6,11 @@ from controllers.menu_controller import menu_ns
 from controllers.review_controller import review_ns
 from controllers.admin_controller import admin_ns
 
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes
+
 
 # Load configuration from config.py
 # app.config.from_object('config')

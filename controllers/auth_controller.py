@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request
 from flask_restx import Namespace, Resource, fields
 from models.student_model import create_student, get_student_by_email
 from utils.helpers import generate_token
@@ -25,11 +25,18 @@ class Signup(Resource):
     @auth_ns.expect(user_signup_model)
     @auth_ns.response(201, 'User created successfully')
     @auth_ns.response(400, 'Validation error')
+    @auth_ns.response(409, 'User already exists')
     def post(self):
         """Sign up a new user"""
         data = request.json
-        student_id = create_student(data)
-        return jsonify({"message": "User created successfully", "user_id": student_id})
+        existing_user = get_student_by_email(data['email'])
+        if existing_user:
+            return {"error": "User already exists"}, 409  # Directly return a dictionary with status code
+        try:
+            student_id = create_student(data)
+            return {"message": "User created successfully", "user_id": student_id}, 201
+        except Exception as e:
+            return {"error": str(e)}, 400
 
 @auth_ns.route('/login')
 class Login(Resource):
@@ -42,6 +49,6 @@ class Login(Resource):
         student = get_student_by_email(data['email'])
         if student and student['password'] == data['password']:
             token = generate_token(student['student_id'])
-            return jsonify({"token": token})
+            return {"token": token}, 200  # Directly return a dictionary with status code
         else:
-            return jsonify({"error": "Invalid credentials"}), 401
+            return {"error": "Invalid credentials"}, 401

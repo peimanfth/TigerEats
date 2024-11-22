@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import request
 from flask_restx import Namespace, Resource, fields
 from models.admin_model import (
     create_admin, get_admin_by_username, create_restaurant,
@@ -54,10 +54,10 @@ class AdminSignup(Resource):
         data = request.json
         errors = validate_admin_data(data)
         if errors:
-            return jsonify({"error": errors}), 400
+            return {"error": errors}, 400
 
         admin_id = create_admin(data)
-        return jsonify({"message": "Admin created successfully", "admin_id": admin_id})
+        return {"message": "Admin created successfully", "admin_id": admin_id}, 201
 
 
 @admin_ns.route('/login')
@@ -71,9 +71,9 @@ class AdminLogin(Resource):
         admin = get_admin_by_username(data['username'])
         if admin and admin['password'] == data['password']:
             token = generate_token(admin['admin_id'])
-            return jsonify({"token": token})
+            return {"token": token}, 200
         else:
-            return jsonify({"error": "Invalid credentials"}), 401
+            return {"error": "Invalid credentials"}, 401
 
 
 @admin_ns.route('/restaurant')
@@ -85,10 +85,10 @@ class RestaurantManagement(Resource):
         data = request.json
         errors = validate_restaurant_data(data)
         if errors:
-            return jsonify({"error": errors}), 400
+            return {"error": errors}, 400
 
         restaurant_id = create_restaurant(data)
-        return jsonify({"message": "Restaurant added successfully", "restaurant_id": restaurant_id})
+        return {"message": "Restaurant added successfully", "restaurant_id": restaurant_id}, 201
 
 
 @admin_ns.route('/menu_item')
@@ -100,10 +100,10 @@ class MenuItemManagement(Resource):
         data = request.json
         errors = validate_menu_item_data(data)
         if errors:
-            return jsonify({"error": errors}), 400
+            return {"error": errors}, 400
 
         item_id = create_menu_item(data)
-        return jsonify({"message": "Menu item added successfully", "item_id": item_id})
+        return {"message": "Menu item added successfully", "item_id": item_id}, 201
 
 
 @admin_ns.route('/menu_item/<int:item_id>/availability')
@@ -115,7 +115,7 @@ class UpdateMenuItemAvailability(Resource):
         data = request.json
         availability = data.get("availability", True)
         update_menu_item_availability(item_id, availability)
-        return jsonify({"message": "Menu item availability updated successfully"})
+        return {"message": "Menu item availability updated successfully"}, 200
 
 
 @admin_ns.route('/student/<int:student_id>/balance')
@@ -127,7 +127,7 @@ class UpdateStudentBalance(Resource):
         data = request.json
         balance = data.get("balance")
         if balance is None:
-            return jsonify({"error": "Balance is required"}), 400
+            return {"error": "Balance is required"}, 400
 
         update_student_balance(student_id, balance)
-        return jsonify({"message": "Student balance updated successfully"})
+        return {"message": "Student balance updated successfully"}, 200
