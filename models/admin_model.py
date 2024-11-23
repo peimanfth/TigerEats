@@ -29,6 +29,11 @@ def create_menu_item(data):
     execute_query(query, (data['restaurant_id'], data['name'], data.get('description', ''), data['price'], data.get('availability', True)))
     return fetch_data("SELECT LAST_INSERT_ID() AS item_id")[0]['item_id']
 
+def delete_menu_item(item_id):
+    """Delete a menu item by its ID"""
+    query = "DELETE FROM MenuItems WHERE item_id = %s"
+    execute_query(query, (item_id,))
+
 def update_menu_item_availability(item_id, availability):
     query = "UPDATE MenuItems SET availability = %s WHERE item_id = %s"
     execute_query(query, (availability, item_id))
@@ -36,3 +41,14 @@ def update_menu_item_availability(item_id, availability):
 def update_student_balance(student_id, balance):
     query = "UPDATE Students SET balance = %s WHERE student_id = %s"
     execute_query(query, (balance, student_id))
+
+
+def get_all_restaurants():
+    """Fetch all restaurants from the database"""
+    query = "SELECT restaurant_id, name, location FROM Restaurants"
+    return fetch_data(query)
+
+def delete_restaurant(restaurant_id):
+    """Delete a restaurant by ID"""
+    query = "DELETE FROM Restaurants WHERE restaurant_id = %s"
+    execute_query(query, (restaurant_id,))

@@ -1,8 +1,9 @@
-from flask import request
+from flask import request, jsonify
 from flask_restx import Namespace, Resource, fields
 from models.admin_model import (
     create_admin, get_admin_by_username, create_restaurant,
-    create_menu_item, update_menu_item_availability, update_student_balance
+    create_menu_item, update_menu_item_availability, update_student_balance,
+    get_all_restaurants, delete_restaurant, delete_menu_item
 )
 from utils.validation import validate_admin_data, validate_menu_item_data, validate_restaurant_data
 from utils.helpers import generate_token
@@ -28,12 +29,20 @@ restaurant_model = admin_ns.model('Restaurant', {
     'location': fields.String(description='Restaurant location')
 })
 
+restaurant_delete_model = admin_ns.model('RestaurantDelete', {
+    'restaurant_id': fields.Integer(required=True, description='ID of the restaurant')
+})
+
 menu_item_model = admin_ns.model('MenuItem', {
     'restaurant_id': fields.Integer(required=True, description='ID of the restaurant'),
     'name': fields.String(required=True, description='Name of the menu item'),
     'description': fields.String(description='Description of the menu item'),
     'price': fields.Float(required=True, description='Price of the menu item'),
     'availability': fields.Boolean(default=True, description='Availability of the menu item')
+})
+
+menu_item_delete_model = admin_ns.model('MenuItemDelete', {
+    'item_id': fields.Integer(required=True, description='ID of the menu item')
 })
 
 update_availability_model = admin_ns.model('UpdateAvailability', {
@@ -76,6 +85,17 @@ class AdminLogin(Resource):
             return {"error": "Invalid credentials"}, 401
 
 
+@admin_ns.route('/restaurants')
+class RestaurantList(Resource):
+    def get(self):
+        """Get the list of all restaurants"""
+        try:
+            restaurants = get_all_restaurants()
+            return jsonify(restaurants)
+        except Exception as e:
+            return {"error": str(e)}, 500
+
+
 @admin_ns.route('/restaurant')
 class RestaurantManagement(Resource):
     @admin_ns.expect(restaurant_model)
@@ -89,6 +109,16 @@ class RestaurantManagement(Resource):
 
         restaurant_id = create_restaurant(data)
         return {"message": "Restaurant added successfully", "restaurant_id": restaurant_id}, 201
+    
+    @admin_ns.expect(restaurant_delete_model)
+    @admin_ns.response(200, 'Restaurant deleted successfully')
+    def delete(self):
+        """Delete a restaurant by ID"""
+        data = request.json
+        restaurant_id = data['restaurant_id']
+        delete_restaurant(restaurant_id)
+        return {"message": "Restaurant deleted successfully"}, 200
+
 
 
 @admin_ns.route('/menu_item')
@@ -104,7 +134,20 @@ class MenuItemManagement(Resource):
 
         item_id = create_menu_item(data)
         return {"message": "Menu item added successfully", "item_id": item_id}, 201
-
+    
+    @admin_ns.expect(menu_item_delete_model)
+    @admin_ns.response(200, 'Menu item deleted successfully')
+    def delete(self):
+        """Delete a menu item by its ID"""
+        try:
+            data = request.json
+            item_id = data['item_id']
+            delete_menu_item(item_id)
+            return {"message": "Menu item deleted successfully"}, 200
+        except KeyError:
+            return {"error": "Item ID is required"}, 400
+        except Exception as e:
+            return {"error": str(e)}, 500
 
 @admin_ns.route('/menu_item/<int:item_id>/availability')
 class UpdateMenuItemAvailability(Resource):

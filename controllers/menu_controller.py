@@ -4,7 +4,7 @@ from models.menu_model import add_menu_item, get_menu_items
 
 menu_ns = Namespace('menu', description='Menu item management operations')
 
-menu_item_model = menu_ns.model('MenuItem', {
+menu_item_model_user = menu_ns.model('MenuItemUser', {
     'restaurant_id': fields.Integer(required=True, description='Restaurant ID'),
     'name': fields.String(required=True, description='Name of the menu item'),
     'description': fields.String(description='Description of the menu item'),
@@ -14,7 +14,7 @@ menu_item_model = menu_ns.model('MenuItem', {
 
 @menu_ns.route('/')
 class AddMenuItem(Resource):
-    @menu_ns.expect(menu_item_model)
+    @menu_ns.expect(menu_item_model_user)
     @menu_ns.response(201, 'Menu item added successfully')
     def post(self):
         """Add a new menu item"""
