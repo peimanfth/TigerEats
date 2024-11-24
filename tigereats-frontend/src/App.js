@@ -7,6 +7,7 @@ import MenuManagement from "./pages/MenuManagement";
 import StudentDashboard from "./pages/StudentDashboard";
 import OrderSummary from "./pages/OrderSummary";
 import RestaurantOrderPage from "./pages/RestaurantOrderPage";
+import AdminOrderManagement from "./pages/AdminOrderManagement";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           path="/admin/restaurant/:restaurantId/menu"
           element={<MenuManagement />}
         />
+        <Route path="/admin/orders" element={<AdminOrderManagement />} />
         {/* <Route path="/student" element={<StudentDashboard />} /> */}
       </Routes>
     </Router>

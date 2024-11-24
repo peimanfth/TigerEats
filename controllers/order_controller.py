@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from flask_restx import Namespace, Resource, fields
-from models.order_model import create_order_with_details, get_orders, get_order_receipt
+from models.order_model import create_order_with_details, get_orders, get_order_receipt, get_all_orders
 
 order_ns = Namespace('order', description='Order management operations')
 
@@ -45,3 +45,11 @@ class OrderReceipt(Resource):
         if not receipt:
             return jsonify({"error": "Order not found"}), 404
         return jsonify(receipt)
+
+@order_ns.route('/all')
+class GetAllOrders(Resource):
+    @order_ns.response(200, 'Orders retrieved successfully')
+    def get(self):
+        """Retrieve all orders"""
+        orders = get_all_orders()
+        return jsonify(orders)

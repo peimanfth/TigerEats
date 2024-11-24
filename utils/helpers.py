@@ -19,6 +19,17 @@ def generate_token(student):
     token = jwt.encode(payload, config["SECRET_KEY"], algorithm="HS256")
     return token
 
+def generate_admin_token(admin):
+    payload = {
+        "admin_id": admin['admin_id'],
+        "username": admin['username'],
+        "email": admin['email'],
+        "role": admin['role'],
+        "exp": datetime.utcnow() + timedelta(hours=24)
+    }
+    token = jwt.encode(payload, config["SECRET_KEY"], algorithm="HS256")
+    return token
+
 def decode_token(token):
     try:
         payload = jwt.decode(token, config["SECRET_KEY"], algorithms=["HS256"])

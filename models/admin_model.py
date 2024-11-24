@@ -52,3 +52,9 @@ def delete_restaurant(restaurant_id):
     """Delete a restaurant by ID"""
     query = "DELETE FROM Restaurants WHERE restaurant_id = %s"
     execute_query(query, (restaurant_id,))
+
+
+def update_order_status(order_id, new_status):
+    """Update the status of an order"""
+    query = "UPDATE Orders SET status = %s WHERE order_id = %s"
+    execute_query(query, (new_status, order_id))

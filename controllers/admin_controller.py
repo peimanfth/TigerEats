@@ -3,10 +3,10 @@ from flask_restx import Namespace, Resource, fields
 from models.admin_model import (
     create_admin, get_admin_by_username, create_restaurant,
     create_menu_item, update_menu_item_availability, update_student_balance,
-    get_all_restaurants, delete_restaurant, delete_menu_item
+    get_all_restaurants, delete_restaurant, delete_menu_item, update_order_status
 )
 from utils.validation import validate_admin_data, validate_menu_item_data, validate_restaurant_data
-from utils.helpers import generate_token
+from utils.helpers import generate_admin_token
 
 # Define the Namespace for Admin operations
 admin_ns = Namespace('admin', description='Admin management operations')
@@ -53,6 +53,10 @@ update_balance_model = admin_ns.model('UpdateBalance', {
     'balance': fields.Float(required=True, description='New balance for the student')
 })
 
+update_order_status_model = admin_ns.model('UpdateOrderStatus', {
+    'status': fields.String(required=True, description='New status of the order')
+})
+
 # API Endpoints
 @admin_ns.route('/signup')
 class AdminSignup(Resource):
@@ -79,7 +83,7 @@ class AdminLogin(Resource):
         data = request.json
         admin = get_admin_by_username(data['username'])
         if admin and admin['password'] == data['password']:
-            token = generate_token(admin['admin_id'])
+            token = generate_admin_token(admin)
             return {"token": token}, 200
         else:
             return {"error": "Invalid credentials"}, 401
@@ -174,3 +178,22 @@ class UpdateStudentBalance(Resource):
 
         update_student_balance(student_id, balance)
         return {"message": "Student balance updated successfully"}, 200
+
+@admin_ns.route('/order/<int:order_id>/status')
+class UpdateOrderStatus(Resource):
+    @admin_ns.expect(update_order_status_model)
+    @admin_ns.response(200, 'Order status updated successfully')
+    def patch(self, order_id):
+        """Update the status of an order"""
+        data = request.json
+        new_status = data.get("status")
+
+        # Validate the status
+        if new_status not in ["Pending", "Pickup", "Completed"]:
+            return {"error": "Invalid status. Valid options are: Pending, Pickup, Completed."}, 400
+
+        try:
+            update_order_status(order_id, new_status)
+            return {"message": f"Order status updated to {new_status}"}, 200
+        except Exception as e:
+            return {"error": str(e)}, 500

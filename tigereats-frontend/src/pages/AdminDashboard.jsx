@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { addRestaurant, deleteRestaurant, getRestaurants } from "../api/api";
+import LogoutButton from "../components/LogoutButton";
 
 const AdminDashboard = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -8,6 +9,7 @@ const AdminDashboard = () => {
     name: "",
     location: "",
   });
+  const navigate = useNavigate();
 
   // Fetch restaurants when the component mounts
   useEffect(() => {
@@ -51,9 +53,14 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleGoToOrders = () => {
+    navigate("/admin/orders");
+  };
+
   return (
     <div>
       <h2>Admin Dashboard</h2>
+      <LogoutButton />
 
       <div>
         <h3>Add Restaurant</h3>
@@ -115,6 +122,11 @@ const AdminDashboard = () => {
         ) : (
           <p>No restaurants available.</p>
         )}
+      </div>
+
+      <div>
+        <h3>Manage Orders</h3>
+        <button onClick={handleGoToOrders}>Go to Orders</button>
       </div>
     </div>
   );

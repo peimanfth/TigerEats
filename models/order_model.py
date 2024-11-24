@@ -75,12 +75,17 @@ def get_orders(student_id):
     query = "SELECT * FROM Orders WHERE student_id = %s"
     return fetch_data(query, (student_id,))
 
+def get_all_orders():
+    query = "SELECT * FROM Orders"
+    return fetch_data(query)
+
 def get_order_receipt(order_id):
     order_query = """
-    SELECT o.order_id, o.total_amount, o.order_date, od.quantity, od.subtotal, m.name AS item_name
+    SELECT o.order_id, o.total_amount, o.order_date, od.quantity, od.subtotal, m.name AS item_name, r.restaurant_id
     FROM Orders o
     JOIN OrderDetails od ON o.order_id = od.order_id
     JOIN MenuItems m ON od.item_id = m.item_id
+    JOIN Restaurants r ON m.restaurant_id = r.restaurant_id
     WHERE o.order_id = %s
     """
     order_details = fetch_data(order_query, (order_id,))
@@ -99,6 +104,7 @@ def get_order_receipt(order_id):
             }
             for detail in order_details
         ],
-        "total_amount": order_details[0]['total_amount']
+        "total_amount": order_details[0]['total_amount'],
+        "restaurant_id": order_details[0]['restaurant_id']
     }
     return receipt

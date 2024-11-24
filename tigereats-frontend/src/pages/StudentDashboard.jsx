@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { getOrders, getRestaurants } from "../api/api";
+import LogoutButton from "../components/LogoutButton";
 
 const StudentDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [studentId, setStudentId] = useState(null);
+  const [studentName, setStudentName] = useState("");
+  const [studentBalance, setStudentBalance] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,6 +23,8 @@ const StudentDashboard = () => {
     try {
       const decoded = jwtDecode(token); // Decode the JWT to get student_id
       setStudentId(decoded.student_id);
+      setStudentName(decoded.first_name);
+      setStudentBalance(decoded.balance);
     } catch (error) {
       alert("Invalid token. Please log in again.");
       localStorage.removeItem("token");
@@ -63,7 +68,11 @@ const StudentDashboard = () => {
 
   return (
     <div>
-      <h2>Student Dashboard</h2>
+      <h2>{studentName}'s Dashboard</h2>
+      <p>
+        <strong>Balance:</strong> ${studentBalance}
+      </p>
+      <LogoutButton />
 
       <div>
         <h3>Your Past Orders</h3>
