@@ -48,7 +48,7 @@ class Login(Resource):
         data = request.json
         student = get_student_by_email(data['email'])
         if student and student['password'] == data['password']:
-            token = generate_token(student['student_id'])
+            token = generate_token(student)
             return {"token": token}, 200  # Directly return a dictionary with status code
         else:
             return {"error": "Invalid credentials"}, 401

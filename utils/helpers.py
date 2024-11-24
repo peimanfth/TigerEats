@@ -6,11 +6,16 @@ import json
 with open('db_config.json', 'r') as config_file:
     config = json.load(config_file)
 
-def generate_token(user_id):
+def generate_token(student):
     payload = {
-        "user_id": user_id,
+        "student_id": student['student_id'],
+        "first_name": student['first_name'],
+        "last_name": student['last_name'],
+        "email": student['email'],
+        'balance': float(student['balance']),
         "exp": datetime.utcnow() + timedelta(hours=24)
     }
+    print(payload)
     token = jwt.encode(payload, config["SECRET_KEY"], algorithm="HS256")
     return token
 
