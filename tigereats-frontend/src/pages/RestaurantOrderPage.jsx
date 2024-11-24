@@ -8,6 +8,7 @@ const RestaurantOrderPage = () => {
   const navigate = useNavigate();
   const [menu, setMenu] = useState([]);
   const [cart, setCart] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null); // To store the selected item for the popup
 
   useEffect(() => {
     fetchMenu();
@@ -63,13 +64,21 @@ const RestaurantOrderPage = () => {
         student_id: studentId,
         items: orderItems,
       };
-      console.log(orderData);
+
       await placeOrder(orderData);
       alert("Order placed successfully!");
       navigate("/student"); // Redirect back to dashboard
     } catch (error) {
       alert("Failed to place order: " + error.response.data.error);
     }
+  };
+
+  const handleShowDescription = (item) => {
+    setSelectedItem(item); // Set the selected item for the popup
+  };
+
+  const handleClosePopup = () => {
+    setSelectedItem(null); // Close the popup
   };
 
   return (
@@ -82,10 +91,14 @@ const RestaurantOrderPage = () => {
           <ul>
             {menu.map((item) => (
               <li key={item.item_id}>
-                <span>
-                  {item.name} - ${item.price}{" "}
-                  {item.availability ? "(Available)" : "(Unavailable)"}
-                </span>
+                <span
+                  style={{ textDecoration: "underline", cursor: "pointer" }}
+                  onClick={() => handleShowDescription(item)} // Show popup on click
+                >
+                  {item.name}
+                </span>{" "}
+                - ${item.price}{" "}
+                {item.availability ? "(Available)" : "(Unavailable)"}
                 {item.availability && (
                   <button onClick={() => handleAddToCart(item)}>
                     Add to Cart
@@ -120,6 +133,44 @@ const RestaurantOrderPage = () => {
         )}
         <button onClick={handlePlaceOrder}>Place Order</button>
       </div>
+
+      {/* Popup for Item Description */}
+      {selectedItem && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "white",
+            border: "1px solid #ccc",
+            borderRadius: "8px",
+            padding: "16px",
+            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+            zIndex: 1000,
+          }}
+        >
+          <h3>{selectedItem.name}</h3>
+          <p>{selectedItem.description}</p>
+          <button onClick={handleClosePopup}>Close</button>
+        </div>
+      )}
+
+      {/* Overlay */}
+      {selectedItem && (
+        <div
+          onClick={handleClosePopup}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 999,
+          }}
+        ></div>
+      )}
     </div>
   );
 };
