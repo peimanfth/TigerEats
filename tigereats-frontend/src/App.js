@@ -6,6 +6,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import MenuManagement from "./pages/MenuManagement";
 import StudentDashboard from "./pages/StudentDashboard";
 import OrderSummary from "./pages/OrderSummary";
+import RestaurantOrderPage from "./pages/RestaurantOrderPage";
 
 const App = () => {
   return (
@@ -14,8 +15,12 @@ const App = () => {
         <Route path="/signin" element={<SignInForm />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/student" element={<StudentDashboard studentId={1} />} />
+        <Route path="/student" element={<StudentDashboard />} />
         <Route path="/student/order/:orderId" element={<OrderSummary />} />
+        <Route
+          path="/student/restaurant/:restaurantId"
+          element={<RestaurantOrderPage />}
+        />
         <Route
           path="/admin/restaurant/:restaurantId/menu"
           element={<MenuManagement />}

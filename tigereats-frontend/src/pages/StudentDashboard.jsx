@@ -1,17 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 import { getOrders, getRestaurants } from "../api/api";
 
-const StudentDashboard = ({ studentId }) => {
+const StudentDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
+  const [studentId, setStudentId] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch orders and restaurants when the component mounts
   useEffect(() => {
-    fetchOrders();
-    fetchRestaurants();
-  }, []);
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("You are not logged in. Redirecting to sign-in page.");
+      navigate("/signin");
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode(token); // Decode the JWT to get student_id
+      setStudentId(decoded.student_id);
+    } catch (error) {
+      alert("Invalid token. Please log in again.");
+      localStorage.removeItem("token");
+      navigate("/signin");
+      return;
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    if (studentId) {
+      fetchOrders();
+      fetchRestaurants();
+    }
+  }, [studentId]);
 
   const fetchOrders = async () => {
     try {

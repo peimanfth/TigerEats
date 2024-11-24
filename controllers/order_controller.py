@@ -24,7 +24,7 @@ class PlaceOrder(Resource):
         data = request.json
         result = create_order_with_details(data)
         if 'error' in result:
-            return jsonify({"error": result['error']}), 400
+            return {"error": result['error']}, 400
         return jsonify({"message": "Order placed successfully", "order_id": result['order_id']})
 
 @order_ns.route('/<int:student_id>')
