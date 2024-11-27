@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import SignInForm from "./components/Auth/SignInForm";
 import SignUpForm from "./components/Auth/SignUpForm";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -13,6 +18,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Navigate to="/signup" />} />
         <Route path="/signin" element={<SignInForm />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/admin" element={<AdminDashboard />} />

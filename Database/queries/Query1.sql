@@ -13,4 +13,4 @@ JOIN
 JOIN 
     Restaurants ON Reviews.restaurant_id = Restaurants.restaurant_id
 WHERE 
-    Students.email = 'john.doe@example.com';
+    Students.email = 'john.doe@lsu.edu';

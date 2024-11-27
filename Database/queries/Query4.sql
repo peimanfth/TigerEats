@@ -9,4 +9,4 @@ SELECT
 FROM 
     Students
 WHERE 
-    balance >= 100 AND balance < 500;
+    balance >= 30 AND balance < 500;

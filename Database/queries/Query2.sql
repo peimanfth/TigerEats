@@ -3,8 +3,6 @@ USE TigerEats;
 SELECT 
     Orders.order_id,
     Orders.student_id,
-    Students.first_name,
-    Students.last_name,
     Students.email,
     Orders.order_date,
     Orders.total_amount,
