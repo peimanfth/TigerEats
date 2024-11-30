@@ -40,56 +40,102 @@ const SignUpForm = () => {
   };
 
   return (
-    <div>
-      <h2>Sign Up</h2>
-      <select value={role} onChange={(e) => setRole(e.target.value)}>
-        <option value="student">Student</option>
-        <option value="admin">Admin</option>
-      </select>
+      <div className="container mt-5">
+        <h2 className="text-center mb-4">Sign Up</h2>
+        <div className="mb-3">
+          <label htmlFor="role" className="form-label">
+            Select Role
+          </label>
+          <select
+              id="role"
+              className="form-select"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="student">Student</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
 
-      {role === "admin" && (
-        <>
-          <input
-            name="username"
-            placeholder="Username"
-            value={formData.username}
-            onChange={handleChange}
-          />
-        </>
-      )}
+        {role === "admin" && (
+            <div className="mb-3">
+              <label htmlFor="username" className="form-label">
+                Username
+              </label>
+              <input
+                  id="username"
+                  name="username"
+                  className="form-control"
+                  placeholder="Username"
+                  value={formData.username}
+                  onChange={handleChange}
+              />
+            </div>
+        )}
 
-      {role === "student" && (
-        <>
-          <input
-            name="firstName"
-            placeholder="First Name"
-            value={formData.firstName}
-            onChange={handleChange}
-          />
-          <input
-            name="lastName"
-            placeholder="Last Name"
-            value={formData.lastName}
-            onChange={handleChange}
-          />
-        </>
-      )}
+        {role === "student" && (
+            <>
+              <div className="mb-3">
+                <label htmlFor="firstName" className="form-label">
+                  First Name
+                </label>
+                <input
+                    id="firstName"
+                    name="firstName"
+                    className="form-control"
+                    placeholder="First Name"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="lastName" className="form-label">
+                  Last Name
+                </label>
+                <input
+                    id="lastName"
+                    name="lastName"
+                    className="form-control"
+                    placeholder="Last Name"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                />
+              </div>
+            </>
+        )}
 
-      <input
-        name="email"
-        placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
-      />
-      <input
-        name="password"
-        placeholder="Password"
-        type="password"
-        value={formData.password}
-        onChange={handleChange}
-      />
-      <button onClick={handleSignUp}>Sign Up</button>
-    </div>
+        <div className="mb-3">
+          <label htmlFor="email" className="form-label">
+            Email
+          </label>
+          <input
+              id="email"
+              name="email"
+              type="email"
+              className="form-control"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleChange}
+          />
+        </div>
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">
+            Password
+          </label>
+          <input
+              id="password"
+              name="password"
+              type="password"
+              className="form-control"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+          />
+        </div>
+        <button className="btn btn-primary w-100" onClick={handleSignUp}>
+          Sign Up
+        </button>
+      </div>
   );
 };
 

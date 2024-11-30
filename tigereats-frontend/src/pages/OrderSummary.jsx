@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getReceipt, addReview } from "../api/api";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 
 const OrderSummary = () => {
   const { orderId } = useParams();
@@ -50,63 +50,86 @@ const OrderSummary = () => {
   };
 
   return (
-    <div>
-      <h2>Order Summary</h2>
-      {orderDetails ? (
-        <div>
-          <p>
-            <strong>Order ID:</strong> {orderDetails.order_id}
-          </p>
-          <p>
-            <strong>Date:</strong>{" "}
-            {new Date(orderDetails.order_date).toLocaleDateString()}
-          </p>
-          <h3>Items</h3>
-          <ul>
-            {orderDetails.items.map((item, index) => (
-              <li key={index}>
-                {item.quantity}x {item.item_name} - ${item.subtotal}
-              </li>
-            ))}
-          </ul>
-          <p>
-            <strong>Total Amount:</strong> ${orderDetails.total_amount}
-          </p>
+      <div className="container mt-5">
+        <h2 className="text-center mb-4">Order Summary</h2>
+        {orderDetails ? (
+            <div className="card">
+              <div className="card-body">
+                <p>
+                  <strong>Order ID:</strong> {orderDetails.order_id}
+                </p>
+                <p>
+                  <strong>Date:</strong>{" "}
+                  {new Date(orderDetails.order_date).toLocaleDateString()}
+                </p>
+                <h3>Items</h3>
+                <ul className="list-group mb-3">
+                  {orderDetails.items.map((item, index) => (
+                      <li key={index} className="list-group-item">
+                        {item.quantity}x {item.item_name} - ${item.subtotal}
+                      </li>
+                  ))}
+                </ul>
+                <p>
+                  <strong>Total Amount:</strong> ${orderDetails.total_amount}
+                </p>
+              </div>
+            </div>
+        ) : (
+            <p className="text-muted text-center">Loading order details...</p>
+        )}
 
-          <h3>Leave a Review</h3>
-          <div>
-            <label>
-              Rating (1-5):
-              <select
-                value={review.rating}
-                onChange={(e) =>
-                  setReview({ ...review, rating: e.target.value })
-                }
-              >
-                <option value="">Select a rating</option>
-                <option value="1">1 - Poor</option>
-                <option value="2">2 - Fair</option>
-                <option value="3">3 - Good</option>
-                <option value="4">4 - Very Good</option>
-                <option value="5">5 - Excellent</option>
-              </select>
-            </label>
-          </div>
-          <div>
-            <textarea
-              placeholder="Write your comments here..."
-              value={review.comments}
-              onChange={(e) =>
-                setReview({ ...review, comments: e.target.value })
-              }
-            />
-          </div>
-          <button onClick={handleSubmitReview}>Submit Review</button>
-        </div>
-      ) : (
-        <p>Loading order details...</p>
-      )}
-    </div>
+        {orderDetails && (
+            <div className="card mt-4">
+              <div className="card-header">
+                <h3>Leave a Review</h3>
+              </div>
+              <div className="card-body">
+                <div className="mb-3">
+                  <label htmlFor="rating" className="form-label">
+                    Rating (1-5):
+                  </label>
+                  <select
+                      id="rating"
+                      className="form-select"
+                      value={review.rating}
+                      onChange={(e) =>
+                          setReview({ ...review, rating: e.target.value })
+                      }
+                  >
+                    <option value="">Select a rating</option>
+                    <option value="1">1 - Poor</option>
+                    <option value="2">2 - Fair</option>
+                    <option value="3">3 - Good</option>
+                    <option value="4">4 - Very Good</option>
+                    <option value="5">5 - Excellent</option>
+                  </select>
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="comments" className="form-label">
+                    Comments:
+                  </label>
+                  <textarea
+                      id="comments"
+                      className="form-control"
+                      rows="3"
+                      placeholder="Write your comments here..."
+                      value={review.comments}
+                      onChange={(e) =>
+                          setReview({ ...review, comments: e.target.value })
+                      }
+                  />
+                </div>
+                <button
+                    className="btn btn-primary w-100"
+                    onClick={handleSubmitReview}
+                >
+                  Submit Review
+                </button>
+              </div>
+            </div>
+        )}
+      </div>
   );
 };
 

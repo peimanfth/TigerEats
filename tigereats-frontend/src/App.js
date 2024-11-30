@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import SignInForm from "./components/Auth/SignInForm";
 import SignUpForm from "./components/Auth/SignUpForm";
 import AdminDashboard from "./pages/AdminDashboard";
